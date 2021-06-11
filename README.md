@@ -162,3 +162,60 @@ Switch(config-if)#no shut
 成功截图：
 
 ![image](https://user-images.githubusercontent.com/57565901/121637797-8b9e4580-cabc-11eb-9363-2b6b1945f9bb.png)
+### 0x0203: 学生宿舍区(DHCP动态分配IP):
+Multilayer Switch 4(以下简称MS4):
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int fa0/1
+Switch(config-if)#switchport access vlan 700
+Switch(config-if)#int vlan 700
+Switch(config-if)#ip address 172.20.40.1 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int fa0/2
+Switch(config-if)#switchport access vlan 701
+Switch(config-if)#int vlan 701
+Switch(config-if)#ip address 172.20.50.1 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int fa0/3
+Switch(config-if)#switchport access vlan 702
+Switch(config-if)#int vlan 702
+Switch(config-if)#ip address 172.20.60.1 255.255.255.0
+Switch(config-if)#no shut
+```
+MS4配置DHCP服务:
+```shell
+Switch(config)#ip dhcp pool vlan700
+Switch(dhcp-config)#network 172.20.40.0 255.255.255.0
+Switch(dhcp-config)#defa
+Switch(dhcp-config)#default-router 172.20.40.1
+Switch(dhcp-config)#dns-server 0.0.0.0
+Switch(dhcp-config)#exit
+Switch(config)#ip dhcp pool vlan701
+Switch(dhcp-config)#network 172.20.50.0 255.255.255.0
+Switch(dhcp-config)#default-router 172.20.50.1
+Switch(dhcp-config)#dns-server 0.0.0.0
+Switch(dhcp-config)#ip dhcp pool vlan702
+Switch(dhcp-config)#network 172.20.60.0 255.255.255.0
+Switch(dhcp-config)#default-router 172.20.60.1
+Switch(dhcp-config)#dns-server 0.0.0.0
+Switch(dhcp-config)#exit
+```
+这几条指令的作用是让所配置的DHCP不分配以下几个IP，因为这几个IP作为网关配置在虚接口Vlan700、701、702中。
+```shell
+Switch(config)#ip dhcp excluded-address 172.20.40.1
+Switch(config)#ip dhcp excluded-address 172.20.50.1
+Switch(config)#ip dhcp excluded-address 172.20.60.1
+```
+注意这里我们要在PC中打开DHCP服务噢！
+
+![image](https://user-images.githubusercontent.com/57565901/121639235-d02ae080-cabe-11eb-86f0-db743c54beb4.png)
+出现图上右下角的由DHCP服务分发的IP，说明DHCP服务配置完成！
+下面我们测试一下主机PC与MS4的连通性：
+
+![image](https://user-images.githubusercontent.com/57565901/121639330-f9e40780-cabe-11eb-82e7-f75abeba880b.png)
+成功！！！我们继续往下做。
+
+### 0x0204: 骨干网络区:
+>为了便于读者阅读，我们将三层交换机`Multilayer Switch`缩写为`MS`。
+
