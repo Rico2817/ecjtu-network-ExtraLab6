@@ -596,3 +596,39 @@ Router(config-if)#exit
 Router(config)#ip nat inside source static 192.168.3.1 200.1.1.242
 Router(config)#ip nat inside source static 192.168.2.1 200.1.1.241
 ```
+到这里我们可以测试一下NAT协议，用外网主机(www.internet-server.com)访问www.ecjtu.jx.cn的外网IP:
+
+![image](https://user-images.githubusercontent.com/57565901/121711207-eb244180-cb0c-11eb-9872-456dbae3655d.png)
+
+但这只能证明我们的静态NAT起作用了，当我们要测试动态NAT的时候怎么办呢qwq
+当然是通过路由器的NAT表了，不过得先通过NAT访问一遍对应的主机。
+
+![image](https://user-images.githubusercontent.com/57565901/121711427-2f174680-cb0d-11eb-9feb-c07d0523bf8f.png)
+然后我们查看NAT表：
+
+![image](https://user-images.githubusercontent.com/57565901/121711530-48b88e00-cb0d-11eb-890e-a15e4ce55302.png)
+我们可以看到圈起来的那些IP都是我们划分的NAT池里面的IP，
+分别是教学区、学生宿舍区、管理员区的IP。
+到这里我们的NAT和ACL的划分已经完成了。
+
+## 0x05 : DNS服务器的配置
+
+最后的DNS服务器的配置就比较简单了，通过Cisco Packet Tracer图形化界面点开服务器，进入如下界面：
+![image](https://user-images.githubusercontent.com/57565901/121712024-d300f200-cb0d-11eb-84d7-d3d8558e7683.png)
+
+分别填入域名和对应的IP地址就行了。
+我们将DNS服务器IP填入主机进行测试：
+
+![image](https://user-images.githubusercontent.com/57565901/121712100-ed3ad000-cb0d-11eb-9181-6a9f6c27355a.png)
+
+接下来访问www.ecjtu.jx.cn:
+
+![image](https://user-images.githubusercontent.com/57565901/121712147-004da000-cb0e-11eb-9a25-9df0b1b3e540.png)
+
+## 0x06:至此我们完成了实验六所有的实验要求
+
+
+所有命令、截图都为本人完成，仅供参考，拒绝转载。   
+ 
+By Auspic1ous 大二菜鸡  
+# 欢迎大家在下方评论
