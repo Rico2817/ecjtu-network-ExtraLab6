@@ -220,4 +220,352 @@ Switch(config)#ip dhcp excluded-address 172.20.60.1
 
 ### 0x0204: 骨干网络区:
 >为了便于读者阅读，我们将三层交换机`Multilayer Switch`缩写为`MS`。
+MS0:
+```shell
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#int f0/24
+Switch(config-if)#sw
+Switch(config-if)#switchport access vlan 321
+% Access VLAN does not exist. Creating vlan 321
+Switch(config-if)#int vlan 321
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan321, changed state to up
 
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan321, changed state to up
+
+Switch(config-if)#ip address 10.10.21.253 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#
+```
+MS1:
+```shell
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#int fa0/24
+Switch(config-if)#sw
+Switch(config-if)#switchport acc
+Switch(config-if)#switchport access vlan 321
+% Access VLAN does not exist. Creating vlan 321
+Switch(config-if)#int vlan 321
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan321, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan321, changed state to up
+
+Switch(config-if)#ip address 10.10.21.254
+% Incomplete command.
+Switch(config-if)#ip address 10.10.21.254 255.255.255.0
+Switch(config-if)#
+Switch(config-if)#int fa0/1
+Switch(config-if)#sw
+Switch(config-if)#switchport access vlan 320
+% Access VLAN does not exist. Creating vlan 320
+Switch(config-if)#int vlan 320
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan320, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan320, changed state to up
+
+Switch(config-if)#ip address 10.10.20.253 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#
+```
+MS4:
+```shell
+
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#int fa0/24
+Switch(config-if)#sw
+Switch(config-if)#switchport access vlan 331
+% Access VLAN does not exist. Creating vlan 331
+Switch(config-if)#int vlan 331
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan331, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan331, changed state to up
+
+Switch(config-if)#ip address 10.10.31.253 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#
+```
+MS5:
+```shell
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#int fa0/24
+Switch(config-if)#sw
+Switch(config-if)#switchport access vlan 331
+% Access VLAN does not exist. Creating vlan 331
+Switch(config-if)#int vlan 331
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan331, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan331, changed state to up
+
+Switch(config-if)#ip address 10.10.31.254 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int fa0/1
+Switch(config-if)#sw
+Switch(config-if)#switchport access vlan 330
+% Access VLAN does not exist. Creating vlan 330
+Switch(config-if)#int vlan 330
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan330, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan330, changed state to up
+
+Switch(config-if)#ip address 10.10.30.253 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#
+```
+>MS2和MS6两台三层交换机要形成聚合链路,所以这里单独分开配置。
+
+MS2:
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int fa0/2
+Switch(config-if)#channel-group 1 mode on
+Switch(config-if)#switchport trunk encapsulation dot1Q
+Switch(config-if)#switchport mode trunk
+Switch(config-if)#int fa0/3
+Switch(config-if)#channel-group 1 mode on
+Switch(config-if)#switchport trunk encapsulation dot1Q
+Switch(config-if)#switchport mode trunk
+Switch(config-if)#int Port-channel 1
+Switch(config-if)#switchport trunk encapsulation dot1Q
+Switch(config-if)#switchport mode trunk
+Switch(config-if)#int fa0/1
+Switch(config-if)#switchport access vlan 320
+Switch(config-if)#int vlan 320
+Switch(config-if)#ip address 10.10.20.254 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int range f0/2-3
+Switch(config-if-range)#switchport access vlan 300
+Switch(config-if-range)#int vlan 300
+Switch(config-if)#ip address 10.10.1.253 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int fa0/24
+Switch(config-if)#switchport access vlan 340
+Switch(config-if)#int vlan 340
+Switch(config-if)#ip address 10.10.40.253 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int fa0/10
+Switch(config-if)#switchport access vlan 341
+Switch(config-if)#int vlan 341
+Switch(config-if)#ip address 10.10.60.253 255.255.255.0
+Switch(config-if)#no shut
+```
+MS6:
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int fa0/1
+Switch(config-if)#switchport access vlan 330
+Switch(config-if)#int vlan 330
+Switch(config-if)#ip address 10.10.30.254 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int range fa0/2-3
+Switch(config-if-range)#channel-group 1 mode on
+Switch(config-if-range)#switchport trunk encapsulation dot1Q
+Switch(config-if-range)#switchport mode trunk
+Switch(config-if-range)#switchport access vlan 300
+Switch(config-if-range)#int vlan 300
+Switch(config-if)#ip address 10.10.1.254 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int fa0/10
+Switch(config-if)#switchport access vlan 350
+Switch(config-if)#int vlan 350
+Switch(config-if)#ip address 10.10.70.253 255.255.255.0
+Switch(config-if)#no shut
+```
+聚合链路完成！下面我们配置路由器Router0的接口IP和网关。
+Router 0:
+```shell
+Router>en
+Router#conf t
+Router(config)#int e1/1
+Router(config-if)#ip address 10.10.70.254 255.255.255.0
+Router(config-if)#no shut
+Router(config)#int e1/0
+Router(config-if)#ip address 10.10.60.254 255.255.255.0
+Router(config-if)#no shut
+Router(config-if)#int f0/0
+Router(config-if)#ip address 10.10.50.254 255.255.255.0
+Router(config-if)#no shut
+Router(config-if)#int f0/1
+Router(config-if)#ip address 200.1.1.254 255.255.255.0
+Router(config-if)#no shut
+```
+>到这里，我们把全部的接口和网关已经配置好了，万事大吉，只欠东风(路由策略)！
+>只要把路由策略做完就能把所有设备联通，
+>下面我们就开始我们熟悉的OSPF动态路由的配置！
+
+## 0x03 : OSPF动态路由协议部署
+
+>如图，我将划分的ospf区域标注起来:
+>![image](https://user-images.githubusercontent.com/57565901/121667233-a41e5800-cadc-11eb-8b5b-7f1631692e75.png)
+
+MS0:
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int loopback0
+Switch(config-if)#ip address 1.1.1.1 255.255.255.0
+Switch(config-if)#no shut 
+Switch(config-if)#exit
+Switch(config)#ip routing
+Switch(config)#router ospf 1
+Switch(config-router)#router-id 1.1.1.1
+Switch(config-router)#log-adjacency-changes 
+Switch(config-router)#network 1.1.1.0 0.0.0.255 area 1
+Switch(config-router)#network 172.16.0.0 0.0.255.255 area 1
+Switch(config-router)#network 10.10.21.0 0.0.0.255 area 1
+Switch(config-router)#exit
+```
+MS1:
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int loopback0
+Switch(config-if)#ip address 2.2.2.2 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#exit
+Switch(config)#ip routing
+Switch(config)#router ospf 1
+Switch(config-router)#router-id 2.2.2.2
+Switch(config-router)#network 2.2.2.0 0.0.0.255 area 1
+Switch(config-router)#network 10.10.21.0 0.0.0.255 area 1
+Switch(config-router)#network 10.10.20.0 0.0.0.255 area 1
+Switch(config-router)#exit
+Switch(config)#
+```
+MS4:
+```shell
+Switch>en
+Switch>en
+Switch#conf t
+Switch(config)#int loopback0
+Switch(config-if)#ip address 5.5.5.5 255.255.255.0
+Switch(config-if)#exit
+Switch(config)#ip routing
+Switch(config)#router ospf 2
+Switch(config-router)#router-id 5.5.5.5
+Switch(config-router)#network 5.5.5.0 0.0.0.255 area 2
+Switch(config-router)#network 172.20.0.0 0.0.255.255 area 2
+Switch(config-router)#network 10.10.31.0 0.0.0.255 area 2
+Switch(config-router)#log-adjacency-changes 
+Switch(config-router)#exit
+Switch(config)#
+```
+MS5:
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int loopback0
+Switch(config-if)#ip address 6.6.6.6 255.255.255.0
+Switch(config-if)#exit
+Switch(config)#ip routing
+Switch(config)#router ospf 2
+Switch(config-router)#router-id 6.6.6.6
+Switch(config-router)#network 6.6.6.0 0.0.0.255 area 2
+Switch(config-router)#network 10.10.31.0 0.0.0.255 area 2
+Switch(config-router)#network 10.10.30.0 0.0.0.255 area 2
+Switch(config-router)#log-adjacency-changes 
+Switch(config-router)#exit
+Switch(config)#
+```
+>下面配置聚合链路中的OSPF：
+
+MS2:
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int loopback0
+Switch(config-if)#ip address 3.3.3.3 255.255.255.0
+Switch(config-if)#exit
+Switch(config)#ip routing
+Switch(config)#router ospf 1
+Switch(config-router)#router-id 3.3.3.3 
+Switch(config-router)#log
+Switch(config-router)#network 3.3.3.0 0.0.0.255 area 0
+Switch(config-router)#network 10.10.20.0 0.0.0.255 area 1
+Switch(config-router)#network 10.10.40.0 0.0.0.255 area 3
+Switch(config-router)#network 10.10.1.0 0.0.0.255 area 0
+Switch(config-router)#network 10.10.60.0 0.0.0.255 area 4
+Switch(config-router)#exit
+Switch(config)#
+```
+
+MS6:
+```shell
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#
+Switch(config)#int loopback0
+
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Loopback0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback0, changed state to up
+
+Switch(config-if)#ip address 7.7.7.7 255.255.255.0
+Switch(config-if)#exit
+Switch(config)#ip routing
+Switch(config)#router ospf 2
+Switch(config-router)#router-id 7.7.7.7
+Switch(config-router)#log
+Switch(config-router)#network 7.7.7.0 0.0.0.255 area 0
+Switch(config-router)#network 10.10.30.0 0.0.0.255 area 2
+Switch(config-router)#network 10.10.70.0 0.0.0.255 area 4
+Switch(config-router)#network 10.10.70.0 0.0.0.255 area 4
+01:15:16: %OSPF-5-ADJCHG: Process 2, Nbr 6.6.6.6 on Vlan330 network 
+% Incomplete command.
+Switch(config-router)#
+Switch(config-router)#network 10.10.1.0 0.0.0.255 area 0
+Switch(config-router)#exit
+Switch(config)#
+```
+MS3:
+```shell
+Switch>en
+Switch#conf t
+Switch(config)#int loopback0
+Switch(config-if)#ip address 4.4.4.4 255.255.255.0
+Switch(config-if)#exit
+Switch(config)#ip routing
+Switch(config)#router ospf 3
+Switch(config-router)#router-id 4.4.4.4
+Switch(config-router)#log
+Switch(config-router)#network 4.4.4.0 0.0.0.255 area 3
+Switch(config-router)#network 10.10.40.0 0.0.0.255 area 3
+Switch(config-router)#network 10.10.50.0 0.0.0.255 area 3
+Switch(config-router)#network 192.168.0.0 0.0.255.255 area 3
+Switch(config-router)#exit
+Switch(config)#
+```
+Router0:
+```shell
+Router>en
+Router#conf t
+Router(config)#int loopback0
+Router(config-if)#ip address 8.8.8.8 255.255.255.0
+Router(config-if)#exit
+Router(config)#router ospf 4
+Router(config-router)#router 8.8.8.8
+Router(config-router)#router-id 8.8.8.8
+Router(config-router)#log
+Router(config-router)#network 8.8.8.0 0.0.0.255 area 4
+Router(config-router)#network 10.10.60.0 0.0.0.255 area 4
+Router(config-router)#network 10.10.70.0 0.0.0.255 area 4
+Router(config-router)#network 200.1.1.0 0.0.0.255 area 4
+Router(config-router)#network 10.10.50.0 0.0.0.255 area 3
+Router(config-router)#exit
+```
