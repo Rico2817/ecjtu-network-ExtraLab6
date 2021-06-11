@@ -130,6 +130,7 @@ Switch(config-if)#int vlan 104
 Switch(config-if)#ip address 192.168.4.254 255.255.255.0
 Switch(config-if)#no shut
 Switch(config-if)#int fa0/10
+Switch(config-if)#switchport trunk encapsulation dot1q
 Switch(config-if)#switchport access vlan 101
 Switch(config-if)#switchport access vlan 102
 Switch(config-if)#switchport access vlan 103
@@ -224,17 +225,9 @@ MS0:
 ```shell
 Switch>en
 Switch#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
 Switch(config)#int f0/24
-Switch(config-if)#sw
 Switch(config-if)#switchport access vlan 321
-% Access VLAN does not exist. Creating vlan 321
 Switch(config-if)#int vlan 321
-Switch(config-if)#
-%LINK-5-CHANGED: Interface Vlan321, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan321, changed state to up
-
 Switch(config-if)#ip address 10.10.21.253 255.255.255.0
 Switch(config-if)#no shut
 Switch(config-if)#
@@ -243,33 +236,28 @@ MS1:
 ```shell
 Switch>en
 Switch#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
 Switch(config)#int fa0/24
-Switch(config-if)#sw
-Switch(config-if)#switchport acc
 Switch(config-if)#switchport access vlan 321
-% Access VLAN does not exist. Creating vlan 321
 Switch(config-if)#int vlan 321
-Switch(config-if)#
-%LINK-5-CHANGED: Interface Vlan321, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan321, changed state to up
-
-Switch(config-if)#ip address 10.10.21.254
-% Incomplete command.
 Switch(config-if)#ip address 10.10.21.254 255.255.255.0
-Switch(config-if)#
 Switch(config-if)#int fa0/1
-Switch(config-if)#sw
 Switch(config-if)#switchport access vlan 320
-% Access VLAN does not exist. Creating vlan 320
 Switch(config-if)#int vlan 320
-Switch(config-if)#
-%LINK-5-CHANGED: Interface Vlan320, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan320, changed state to up
-
 Switch(config-if)#ip address 10.10.20.253 255.255.255.0
+Switch(config-if)#no shut
+```
+MS3:
+```shell
+Switch#conf t
+Switch(config)#int f0/24
+Switch(config-if)#switchport access vlan 340
+Switch(config-if)#int vlan 340
+Switch(config-if)#ip address 10.10.40.254 255.255.255.0
+Switch(config-if)#no shut
+Switch(config-if)#int f0/1
+Switch(config-if)#switchport access vlan 350
+Switch(config-if)#int vlan 350
+Switch(config-if)#ip address 10.10.50.253 255.255.255.0
 Switch(config-if)#no shut
 Switch(config-if)#
 ```
@@ -278,48 +266,24 @@ MS4:
 
 Switch>en
 Switch#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
 Switch(config)#int fa0/24
-Switch(config-if)#sw
 Switch(config-if)#switchport access vlan 331
-% Access VLAN does not exist. Creating vlan 331
 Switch(config-if)#int vlan 331
-Switch(config-if)#
-%LINK-5-CHANGED: Interface Vlan331, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan331, changed state to up
-
 Switch(config-if)#ip address 10.10.31.253 255.255.255.0
 Switch(config-if)#no shut
-Switch(config-if)#
 ```
 MS5:
 ```shell
 Switch>en
 Switch#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
 Switch(config)#int fa0/24
-Switch(config-if)#sw
 Switch(config-if)#switchport access vlan 331
-% Access VLAN does not exist. Creating vlan 331
 Switch(config-if)#int vlan 331
-Switch(config-if)#
-%LINK-5-CHANGED: Interface Vlan331, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan331, changed state to up
-
 Switch(config-if)#ip address 10.10.31.254 255.255.255.0
 Switch(config-if)#no shut
 Switch(config-if)#int fa0/1
-Switch(config-if)#sw
 Switch(config-if)#switchport access vlan 330
-% Access VLAN does not exist. Creating vlan 330
 Switch(config-if)#int vlan 330
-Switch(config-if)#
-%LINK-5-CHANGED: Interface Vlan330, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan330, changed state to up
-
 Switch(config-if)#ip address 10.10.30.253 255.255.255.0
 Switch(config-if)#no shut
 Switch(config-if)#
@@ -549,7 +513,7 @@ Switch(config-router)#network 10.10.40.0 0.0.0.255 area 3
 Switch(config-router)#network 10.10.50.0 0.0.0.255 area 3
 Switch(config-router)#network 192.168.0.0 0.0.255.255 area 3
 Switch(config-router)#exit
-Switch(config)#
+Switch(config)#ip route 0.0.0.0 0.0.0.0 10.10.40.253 //添加缺省路由
 ```
 Router0:
 ```shell
@@ -568,4 +532,67 @@ Router(config-router)#network 10.10.70.0 0.0.0.255 area 4
 Router(config-router)#network 200.1.1.0 0.0.0.255 area 4
 Router(config-router)#network 10.10.50.0 0.0.0.255 area 3
 Router(config-router)#exit
+```
+>如果你跟着我的步骤来写，到这里所有的主机或者服务器都应该可以相互通信了！
+>效果图如下：
+>
+>![image](https://user-images.githubusercontent.com/57565901/121694187-777a3880-cafc-11eb-9a04-f27141203581.png)
+>
+>![image](https://user-images.githubusercontent.com/57565901/121694398-abedf480-cafc-11eb-95cc-dcedb1016a0b.png)
+
+## 0x04 :ACL访问控制列表和NAT的设置:
+>题目要求：
+>MS3：
+>1.ACL 101禁止学生宿舍区访问内网PRI服务器，虚接口配置101 in
+>2.ACL 101只允许访问192.168.3.1 tcp80端口
+>
+>
+>Router 0：
+>ACL101:permit 172.16.0.0/16
+>ACL102:permit 172.20.0.0/16
+>ACL103:permit 192.168.0.0/16
+
+MS3:
+```shell
+Switch#conf t
+Switch(config)#access-list 101 permit tcp any 192.168.3.1 0.0.0.255 eq 80
+Switch(config)#access-list 101 deny ip 172.20.0.0 0.0.255.255 host 192.168.1.1
+Switch(config)#access-list 101 deny ip any 192.168.3.1 0.0.0.255
+Switch(config)#access-list 101 permit ip any any
+Switch(config)#int vlan 340
+Switch(config-if)#ip access-group 101 in
+Switch(config-if)#int vlan 350
+Switch(config-if)#ip access-group 101 in
+Switch(config-if)#exit
+```
+>此处注意nat相关的标准访问控制列表acl只能是路由器接口in方向
+Router0:
+```shell
+Router>en
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#access-list 101 permit ip 172.16.0.0 0.0.255.255 any
+Router(config)#access-list 101 deny ip any any
+Router(config)#access-list 102 permit ip 172.20.0.0 0.0.255.255 any
+Router(config)#access-list 102 deny ip any any
+Router(config)#access-list 103 permit ip 192.168.0.0 0.0.255.255 any
+Router(config)#access-list 103 deny ip any any
+Router(config)#ip nat pool pool-teacher 200.1.1.31 200.1.1.100 netmask 255.255.255.0
+Router(config)#ip nat pool pool-student 200.1.1.101 200.1.1.230 netmask 255.255.255.0
+Router(config)#ip nat pool pool-admin 200.1.1.231 200.1.1.240 netmask 255.255.255.0
+Router(config)#ip nat inside source list 101 pool pool-teacher
+Router(config)#ip nat inside source list 102 pool pool-student
+Router(config)#ip nat inside source list 103 pool pool-admin
+Router(config)#int fa0/0
+Router(config-if)#ip nat inside
+Router(config-if)#int e1/0
+Router(config-if)#ip nat inside
+Router(config-if)#int e1/1
+Router(config-if)#ip nat inside
+Router(config-if)#int f0/1
+Router(config-if)#ip nat outside
+Router(config-if)#exit
+//设置静态nat
+Router(config)#ip nat inside source static 192.168.3.1 200.1.1.242
+Router(config)#ip nat inside source static 192.168.2.1 200.1.1.241
 ```
