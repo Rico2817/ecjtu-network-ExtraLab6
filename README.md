@@ -11,18 +11,20 @@
 由于网络结构过于复杂，为了便于读者阅读，我把各区域的拓扑图分开截取：
 
 ### 【教学区】
-![image](https://user-images.githubusercontent.com/57565901/121634080-905ffb00-cab6-11eb-8b33-f7909d019262.png)
+![image](https://user-images.githubusercontent.com/57565901/121639715-87bff280-cabf-11eb-9dad-f31e487cea05.png)
+
 ### 【宿舍区】
-![image](https://user-images.githubusercontent.com/57565901/121633088-c308f400-cab4-11eb-9582-209eacca2813.png)
+![image](https://user-images.githubusercontent.com/57565901/121639752-973f3b80-cabf-11eb-8702-685d4384e9d5.png)
 ### 【骨干网络区】
-![image](https://user-images.githubusercontent.com/57565901/121633148-dae07800-cab4-11eb-88d1-66ff2049f87e.png)
+![image](https://user-images.githubusercontent.com/57565901/121639824-af16bf80-cabf-11eb-9d5d-617fe34728ab.png)
 ### 【外网出口】
-![image](https://user-images.githubusercontent.com/57565901/121633187-e9c72a80-cab4-11eb-86b1-d1f63a0c551b.png)
+![image](https://user-images.githubusercontent.com/57565901/121639841-b938be00-cabf-11eb-83e1-63684f34c743.png)
 ### 【DMZ数据机房区】
-![image](https://user-images.githubusercontent.com/57565901/121634113-9ce45380-cab6-11eb-9091-8babf45ce929.png)
+![image](https://user-images.githubusercontent.com/57565901/121639890-c786da00-cabf-11eb-8117-65ad5262362f.png)
 
 ## 0x02:配置接口和IP，设置网关：
 PC1(静态IP主机以此类推,DHCP协议主机例外):
+
 ![image](https://user-images.githubusercontent.com/57565901/121633542-90133000-cab5-11eb-8d52-1065bc87f32a.png)
 ### 0x0201: 各种二层路由器的配置：
 >配置交换机接口Vlan并打开接口
