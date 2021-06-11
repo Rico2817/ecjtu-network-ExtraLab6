@@ -625,7 +625,7 @@ Router(config)#ip nat inside source static 192.168.2.1 200.1.1.241
 
 ![image](https://user-images.githubusercontent.com/57565901/121712147-004da000-cb0e-11eb-9a25-9df0b1b3e540.png)
 
-## 0x06:至此我们完成了实验六所有的实验要求
+## 0x06:至此我们完成了校园网实验所有的实验要求
 
 
 所有命令、截图都为本人完成，仅供参考，拒绝转载。   
